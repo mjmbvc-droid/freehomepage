@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>소방관</title>
+  <link rel="stylesheet" href="singer.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- 배경 -->
+    <img src="images/background3.png" alt="배경" class="bg-img" />
+
+    <!-- 🔹 상단 좌측 돌아가기 버튼 -->
+    <a href="choice.html" class="back-btn">다른 직업 알아보기</a>
+
+    <!-- 콘텐츠 래퍼: 위층(좌우) + 아래층(입력바) -->
+    <div class="content-wrap">
+      <!-- 위층: 좌우 분할 -->
+      <section class="top-row">
+        <div class="left-panel">
+          <img src="images/소방관2.png" alt="소방관 캐릭터" class="character-img" />
+        </div>
+
+        <!-- 우측 패널 -->
+        <div class="right-panel">
+          <!-- 우측 보드: 말풍선 + 3x2 질문 버튼 (absolute) -->
+          <div class="right-board">
+            <!-- 말풍선 이미지 -->
+            <img src="images/말풍선.png" alt="말풍선" class="bubble" />
+
+            <!-- 말풍선 텍스트 (초기 문구) -->
+            <div id="bubble-text" class="bubble-text">
+              소방관은 불을 끄고 사람들을 위험에서 구하는 직업입니다.
+            </div>
+
+            <!-- 질문 버튼 3x2 (클릭 시 고정 답변 표시) -->
+            <a href="#" class="qbtn q1"
+               data-answer="소방관이 되려면 화재 안전과 구조 방법을 배워야 해요. 몸을 튼튼히 하고 체력을 길러야 해요. 어려운 상황에서 침착하게 행동하는 훈련도 필요해요.">
+              <img src="images/질문1.png" alt="질문1" />
+            </a>
+
+            <a href="#" class="qbtn q2"
+               data-answer="불이 나면 불을 끄고 사람을 구해요. 사고가 나면 위험한 곳에서 구조 작업을 해요. 평소에는 훈련을 하며 준비해요.">
+              <img src="images/질문2.png" alt="질문2" />
+            </a>
+
+            <a href="#" class="qbtn q3"
+               data-answer="불길 속에서 위험을 무릅쓰고 일해야 해요. 구조하다가 몸이 다칠 수도 있어요. 정신적으로도 큰 용기가 필요해요.">
+              <img src="images/질문3.png" alt="질문3" />
+            </a>
+
+            <a href="#" class="qbtn q4"
+               data-answer="불에서 사람을 안전하게 구했을 때 뿌듯해요. 시민이 무사히 가족에게 돌아갈 때 보람을 느껴요. 모두의 생명을 지켰다는 게 큰 힘이 돼요.">
+              <img src="images/질문4.png" alt="질문4" />
+            </a>
+
+            <a href="#" class="qbtn q5"
+               data-answer="위험한 상황에서 사람들을 구해요. 불이나 사고를 막아 시민을 안전하게 지켜줘요. 사람들의 생명을 보호하는 아주 중요한 직업이에요.">
+              <img src="images/질문5.png" alt="질문5" />
+            </a>
+
+            <a href="#" class="qbtn q6"
+               data-answer="용기와 희생정신이 필요해요. 사람들을 먼저 생각하는 마음이 있어야 해요. 끝까지 책임지고 도와주려는 태도가 필요해요.">
+              <img src="images/질문6.png" alt="질문6" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 아래층: 전체 폭 입력바 -->
+      <section class="bottom-row">
+        <div class="input-label">궁금한 내용을<br>직접 써보세요</div>
+        <input type="text" class="input-box" placeholder="여기에 입력하세요..." />
+        <button class="send-btn">전송</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- 스크립트: ① 고정답 표시 ② 전송시 GPT 호출 -->
+  <script>
+    // ① 질문 버튼: 고정된 답변을 말풍선에 표시
+    document.querySelectorAll('.qbtn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const answer = btn.getAttribute('data-answer');
+        const bubble = document.getElementById('bubble-text');
+        bubble.innerHTML = answer; // <br> 줄바꿈 유지
+      });
+    });
+
+    // ② 전송 버튼: 입력한 질문을 GPT에 보내고 말풍선에 표시
+    const sendBtn = document.querySelector('.send-btn');
+    const inputBox = document.querySelector('.input-box');
+    const bubbleText = document.getElementById('bubble-text');
+
+    // ⚠️ 실습용: API 키를 직접 코드에 포함 (배포용으론 비권장)
+    const API_KEY = "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"; // ← 실제 키로 교체
+
+    async function askAI(question) {
+      try {
+        // 로딩 표시
+        bubbleText.innerHTML = "답변을 생성 중이에요...";
+
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: "너는 초등학생을 대상으로 직업을 설명해주는 친절한 선생님이야. 답변은 2~3문장 정도로 짧고 알기 쉽게 말해줘. 어려운 전문 용어는 쓰지 말고, 쉬운 단어와 친근한 말투를 사용해. 설명할 때는 마치 아이와 대화하듯 따뜻하게 말하고, ." },
+              { role: "user", content: question }
+            ],
+            max_tokens: 300,
+            temperature: 0.7
+          })
+        });
+
+        const data = await res.json();
+        const answer = data?.choices?.[0]?.message?.content || "답변이 비어있어요.";
+        bubbleText.innerHTML = answer.replace(/\n/g, "<br>");
+      } catch (e) {
+        console.error(e);
+        bubbleText.innerHTML = "오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+      }
+    }
+
+    // 전송 버튼 클릭
+    sendBtn.addEventListener('click', () => {
+      const q = inputBox.value.trim();
+      if (!q) return;
+      askAI(q);
+    });
+
+    // 엔터키도 전송
+    inputBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = inputBox.value.trim();
+        if (q) askAI(q);
+      }
+    });
+  </script>
+</body>
+</html>
+

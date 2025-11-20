@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>판사</title>
+  <link rel="stylesheet" href="singer.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- 배경 -->
+    <img src="images/background3.png" alt="배경" class="bg-img" />
+
+    <!-- 🔹 상단 좌측 돌아가기 버튼 -->
+    <a href="choice.html" class="back-btn">다른 직업 알아보기</a>
+
+    <!-- 콘텐츠 래퍼: 위층(좌우) + 아래층(입력바) -->
+    <div class="content-wrap">
+      <!-- 위층: 좌우 분할 -->
+      <section class="top-row">
+        <div class="left-panel">
+          <img src="images/판사2.png" alt="판사 캐릭터" class="character-img" />
+        </div>
+
+        <!-- 우측 패널 -->
+        <div class="right-panel">
+          <!-- 우측 보드: 말풍선 + 3x2 질문 버튼 (absolute) -->
+          <div class="right-board">
+            <!-- 말풍선 이미지 -->
+            <img src="images/말풍선.png" alt="말풍선" class="bubble" />
+
+            <!-- 말풍선 텍스트 (초기 문구) -->
+            <div id="bubble-text" class="bubble-text">
+              판사는 법에 따라 옳고 그름을 판단하고 올바른 결정을 내려주는 직업입니다. 
+            </div>
+
+            <!-- 질문 버튼 3x2 (클릭 시 고정 답변 표시) -->
+            <a href="#" class="qbtn q1"
+               data-answer="판사가 되려면 법과 규칙을 열심히 공부해야 해요. 책을 많이 읽고 깊이 생각하는 습관이 필요해요. 올바른 판단을 내리는 훈련도 받아야 해요.">
+              <img src="images/질문1.png" alt="질문1" />
+            </a>
+
+            <a href="#" class="qbtn q2"
+               data-answer="법정에서 사람들이 다툰 이야기를 듣고 판결을 내려요. 사건 기록을 읽고 꼼꼼히 확인해요. 하루 종일 집중하며 일해요.">
+              <img src="images/질문2.png" alt="질문2" />
+            </a>
+
+            <a href="#" class="qbtn q3"
+               data-answer="중요한 결정을 내려야 해서 부담이 커요. 모두가 만족하지 못할 때 마음이 힘들어요. 늘 공정해야 해서 긴장돼요.">
+              <img src="images/질문3.png" alt="질문3" />
+            </a>
+
+            <a href="#" class="qbtn q4"
+               data-answer="사람들이 판결에 따라 문제를 해결하고 화해할 때 뿌듯해요. 공정하게 판단해 모두가 안심할 때 보람을 느껴요. 사회가 질서 있게 돌아간다는 걸 느껴요.">
+              <img src="images/질문4.png" alt="질문4" />
+            </a>
+
+            <a href="#" class="qbtn q5"
+               data-answer="사회가 안전하고 질서 있게 지내도록 도와줘요. 억울한 사람을 보호하고 나쁜 일을 막아줘요. 모두가 법을 지키게 해요.">
+              <img src="images/질문5.png" alt="질문5" />
+            </a>
+
+            <a href="#" class="qbtn q6"
+               data-answer="언제나 정직하고 공정해야 해요. 개인적인 욕심에 흔들리지 않는 마음이 필요해요. 법을 믿고 책임감 있게 행동해야 해요.">
+              <img src="images/질문6.png" alt="질문6" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 아래층: 전체 폭 입력바 -->
+      <section class="bottom-row">
+        <div class="input-label">궁금한 내용을<br>직접 써보세요</div>
+        <input type="text" class="input-box" placeholder="여기에 입력하세요..." />
+        <button class="send-btn">전송</button>
+      </section>
+    </div>
+  </div>
+
+  <!-- 스크립트: ① 고정답 표시 ② 전송시 GPT 호출 -->
+  <script>
+    // ① 질문 버튼: 고정된 답변을 말풍선에 표시
+    document.querySelectorAll('.qbtn').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const answer = btn.getAttribute('data-answer');
+        const bubble = document.getElementById('bubble-text');
+        bubble.innerHTML = answer; // <br> 줄바꿈 유지
+      });
+    });
+
+    // ② 전송 버튼: 입력한 질문을 GPT에 보내고 말풍선에 표시
+    const sendBtn = document.querySelector('.send-btn');
+    const inputBox = document.querySelector('.input-box');
+    const bubbleText = document.getElementById('bubble-text');
+
+    // ⚠️ 실습용: API 키를 직접 코드에 포함 (배포용으론 비권장)
+    const API_KEY = "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"; // ← 실제 키로 교체
+
+    async function askAI(question) {
+      try {
+        // 로딩 표시
+        bubbleText.innerHTML = "답변을 생성 중이에요...";
+
+        const res = await fetch("https://api.openai.com/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${API_KEY}`
+          },
+          body: JSON.stringify({
+            model: "gpt-3.5-turbo",
+            messages: [
+              { role: "system", content: "너는 초등학생을 대상으로 직업을 설명해주는 친절한 선생님이야. 답변은 2~3문장 정도로 짧고 알기 쉽게 말해줘. 어려운 전문 용어는 쓰지 말고, 쉬운 단어와 친근한 말투를 사용해. 설명할 때는 마치 아이와 대화하듯 따뜻하게 말하고, ." },
+              { role: "user", content: question }
+            ],
+            max_tokens: 300,
+            temperature: 0.7
+          })
+        });
+
+        const data = await res.json();
+        const answer = data?.choices?.[0]?.message?.content || "답변이 비어있어요.";
+        bubbleText.innerHTML = answer.replace(/\n/g, "<br>");
+      } catch (e) {
+        console.error(e);
+        bubbleText.innerHTML = "오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+      }
+    }
+
+    // 전송 버튼 클릭
+    sendBtn.addEventListener('click', () => {
+      const q = inputBox.value.trim();
+      if (!q) return;
+      askAI(q);
+    });
+
+    // 엔터키도 전송
+    inputBox.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const q = inputBox.value.trim();
+        if (q) askAI(q);
+      }
+    });
+  </script>
+</body>
+</html>
+

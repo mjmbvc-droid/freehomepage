@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>직업 선택</title>
+  <link rel="stylesheet" href="choice.css" />
+</head>
+<body>
+  <div class="container">
+    <!-- 배경 이미지 -->
+    <img src="images/background2.png" alt="배경" class="bg-img" />
+
+    <!-- 대화창 영역 -->
+    <div id="dialog-container" class="dialog-container hidden">
+      <img id="dialog1" src="images/dialog1.png" class="dialog" />
+      <img id="dialog2" src="images/dialog2.png" class="dialog hidden" />
+      <img id="dialog3" src="images/dialog3.png" class="dialog hidden" />
+      <img id="next-btn" src="images/다음버튼.png" class="next-btn" />
+    </div>
+
+    <!-- 직업 선택 보드 -->
+    <div class="choice-board" id="choice-board">
+      <a href="singer.html" class="job-btn btn1"><img src="images/가수.png" alt="가수" /></a>
+      <a href="police.html" class="job-btn btn2"><img src="images/경찰관.png" alt="경찰관" /></a>
+      <a href="scientist.html" class="job-btn btn3"><img src="images/과학자.png" alt="과학자" /></a>
+      <a href="teacher.html" class="job-btn btn4"><img src="images/교사.png" alt="교사" /></a>
+      <a href="firefighter.html" class="job-btn btn5"><img src="images/소방관.png" alt="소방관" /></a>
+      <a href="baseball.html" class="job-btn btn6"><img src="images/야구선수.png" alt="야구선수" /></a>
+      <a href="doctor.html" class="job-btn btn7"><img src="images/의사.png" alt="의사" /></a>
+      <a href="judge.html" class="job-btn btn8"><img src="images/판사.png" alt="판사" /></a>
+    </div>
+  </div>
+
+  <script>
+    // URL 파라미터 확인하여 home.html에서 왔는지 체크
+    const urlParams = new URLSearchParams(window.location.search);
+    const showDialog = urlParams.get('dialog') === 'true';
+
+    if (showDialog) {
+      // home.html에서 온 경우: 대화창 먼저 보여주기
+      document.getElementById("dialog-container").classList.remove("hidden");
+      document.getElementById("choice-board").classList.add("hidden");
+
+      const dialogs = ["dialog1", "dialog2", "dialog3"];
+      let current = 0;
+
+      const nextBtn = document.getElementById("next-btn");
+
+      nextBtn.onclick = () => {
+        // 현재 대화 숨기기
+        document.getElementById(dialogs[current]).classList.add("hidden");
+
+        current++;
+
+        if (current < dialogs.length) {
+          // 다음 대화 보이기
+          document.getElementById(dialogs[current]).classList.remove("hidden");
+        } else {
+          // 모든 대화 끝 → 대화창 숨기고 직업선택 보드 보이기
+          document.getElementById("dialog-container").classList.add("hidden");
+          document.getElementById("choice-board").classList.remove("hidden");
+        }
+      };
+    }
+    // showDialog가 false이거나 없는 경우: 직업선택 보드만 표시 (기본 상태)
+  </script>
+</body>
+</html>
